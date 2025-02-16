@@ -1,3 +1,11 @@
+struct View {
+    buff: [[char; 24]; 80],
+    height: u8,
+}
+
 fn main() {
-    println!("Hello, world!");
+    let mut foo = View {
+        buff: [[' '; 24]; 80],
+        height: 20,
+    };
 }

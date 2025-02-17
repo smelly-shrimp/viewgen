@@ -1,3 +1,5 @@
+mod terminal;
+
 struct View {
     buff: [[char; 80]; 24],
     height: u8,
@@ -5,6 +7,8 @@ struct View {
 
 impl View {
     fn draw(&self) {
+        terminal::enter_alter_scr_buff();
+
         for row in self.buff.iter() {
             for &elm in row.iter() {
                 print!("{elm}");
@@ -12,6 +16,9 @@ impl View {
 
             print!("\n")
         }
+
+        terminal::wait_for_exit();
+        terminal::exit_alter_scr_buff();
     }
 }
 

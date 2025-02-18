@@ -1,51 +1,56 @@
 use rand::Rng;
+use terminal::mv_cur;
 
 mod terminal;
 
+const COL_LEN: usize = 24;
+
 struct View {
-    buff: [[char; 80]; 24],
+    buff: [usize; 80],
     height: usize,
 }
+
+type Chunk = [char; 24];
 
 impl View {
     fn draw(&self) {
         terminal::enter_alter_scr_buff();
 
-        for row in self.buff.iter() {
-            for &elm in row.iter() {
-                print!("{elm}");
+        let mut col = 1;
+        for h in self.buff {
+            let blank = COL_LEN - h - self.height;
+
+            for row_i in 0..blank {
+                mv_cur(row_i + 1, col);
+                print!(".");
             }
 
-            print!("\n")
+            for row_i in COL_LEN - h - self.height..COL_LEN {
+                mv_cur(row_i + 1, col);
+                print!("#");
+            }
+
+            col += 1;
         }
 
         terminal::wait_for_exit();
         terminal::exit_alter_scr_buff();
     }
 
-    fn get_chunk(&self) -> [char; 24] {
-        let mut res = ['.'; 24];
+    fn get_chunk(&self) -> usize {
+        let max_val = COL_LEN - self.height;
 
-        let max_val = res.len() - self.height;
+        let h = rand::rng().random_range(0..=max_val);
 
-        let mut h = rand::rng().random_range(0..=max_val);
-
-        h = res.len() - (self.height + h);
-
-        for i in h..res.len() {
-            res[i] = '#';
-        }
-
-        res
+        COL_LEN - (self.height + h)
     }
 }
 
 fn main() {
     let foo = View {
-        buff: [['.'; 80]; 24],
+        buff: [0; 80],
         height: 8,
     };
 
     foo.draw();
-    println!("{:?}", foo.get_chunk());
 }

@@ -1,5 +1,6 @@
 use rand::Rng;
 use terminal::mv_cur;
+use text_io::read;
 
 mod terminal;
 
@@ -57,8 +58,20 @@ impl View {
     }
 }
 
+fn get_values() -> (usize, usize) {
+    print!("(min) Height: ");
+    let height: usize = read!();
+    
+    print!("Spikeness: ");
+    let spikeness: usize = read!();
+
+    (height, spikeness)
+}
+
 fn main() {
-    let foo = View::new(5, 24);
+    let vals = get_values();
+
+    let foo = View::new(vals.0, vals.1);
 
     foo.draw();
 }

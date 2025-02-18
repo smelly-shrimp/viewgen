@@ -8,22 +8,39 @@ const COL_LEN: usize = 24;
 struct View {
     buff: [usize; 80],
     height: usize,
+    spikeness: usize,
 }
 
 impl View {
+    fn new(mut height: usize, mut spikeness: usize) -> View {
+        if height + spikeness > COL_LEN {
+            let out_count = height + spikeness - COL_LEN;
+            let pseudo_half = out_count / 2;
+
+            height -= pseudo_half;
+            spikeness -= out_count - pseudo_half;
+        }
+
+        View {
+            buff: [0; 80],
+            height,
+            spikeness,
+        }
+    }
+
     fn draw(&self) {
         terminal::enter_alter_scr_buff();
 
         let mut col = 1;
         for h in self.buff {
-            let blank = COL_LEN - h - self.height;
+            let blank = COL_LEN - h - self.height - self.get_chunk();
 
             for row_i in 0..blank {
                 mv_cur(row_i + 1, col);
                 print!(".");
             }
 
-            for row_i in COL_LEN - h - self.height - self.get_chunk()..COL_LEN {
+            for row_i in blank..COL_LEN {
                 mv_cur(row_i + 1, col);
                 print!("#");
             }
@@ -36,19 +53,12 @@ impl View {
     }
 
     fn get_chunk(&self) -> usize {
-        let max_val = COL_LEN - self.height;
-
-        let h = rand::rng().random_range(0..=max_val);
-
-        COL_LEN - (self.height + h)
+        rand::rng().random_range(0..=self.spikeness)
     }
 }
 
 fn main() {
-    let foo = View {
-        buff: [0; 80],
-        height: 8,
-    };
+    let foo = View::new(5, 24);
 
     foo.draw();
 }

@@ -1,4 +1,4 @@
-use std::{fmt::write, io::{self, Write}};
+use std::io::{self, Write};
 
 fn flush() {
     io::stdout().flush().unwrap();

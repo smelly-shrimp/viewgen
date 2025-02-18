@@ -10,8 +10,6 @@ struct View {
     height: usize,
 }
 
-type Chunk = [char; 24];
-
 impl View {
     fn draw(&self) {
         terminal::enter_alter_scr_buff();
@@ -25,7 +23,7 @@ impl View {
                 print!(".");
             }
 
-            for row_i in COL_LEN - h - self.height..COL_LEN {
+            for row_i in COL_LEN - h - self.height - self.get_chunk()..COL_LEN {
                 mv_cur(row_i + 1, col);
                 print!("#");
             }

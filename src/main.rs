@@ -23,5 +23,7 @@ fn main() {
     let height = get_val(&stdin, &mut input, "(min) height");
     let spikeness = get_val(&stdin, &mut input, "spikeness");
 
-    View::new(height, spikeness).draw(&stdin, &mut input);
+    let mut view = View::new();
+    view.gen(height, spikeness);
+    view.draw(&stdin, &mut input)
 }

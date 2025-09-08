@@ -1,60 +1,50 @@
 use std::io::Stdin;
 
-use rand::Rng;
 use crate::term;
+use rand::Rng;
 
-const COL_LEN: usize = 24;
+const COLH: usize = 24;
 
 pub struct View {
     buff: [usize; 80],
-    height: usize,
-    spikeness: usize,
 }
 
 impl View {
-    pub fn new(mut height: usize, mut spikeness: usize) -> View {
+    pub fn new() -> View {
+        View { buff: [0; 80] }
+    }
+
+    pub fn gen(&mut self, mut height: usize, mut spikeness: usize) {
         let sum = height + spikeness;
 
-        if sum > COL_LEN {
-            let out_count = height + spikeness - COL_LEN;
-            let pseudo_half = out_count / 2;
+        if sum > COLH {
+            let height_part = height as f64 / sum as f64;
 
-            height -= pseudo_half;
-            spikeness -= out_count - pseudo_half;
+            height = (COLH as f64 * height_part) as usize;
+            spikeness = COLH - height;
         }
 
-        View {
-            buff: [0; 80],
-            height,
-            spikeness,
+        for col in self.buff.iter_mut() {
+            *col = rand::rng().random_range(height..=height + spikeness);
         }
     }
 
     pub fn draw(&self, stdin: &Stdin, input: &mut String) {
         term::enter_alter_scr();
 
-        let mut col = 1;
-        for h in self.buff {
-            let blank = COL_LEN - h - self.height - self.get_chunk();
+        for (col, height) in self.buff.iter().enumerate() {
+            let blank = COLH - height;
 
-            for row_i in 0..blank {
-                term::mv_cur(row_i + 1, col);
-                print!(".");
+            for row in 0..blank {
+                term::print(row, col, '.');
             }
 
-            for row_i in blank..COL_LEN {
-                term::mv_cur(row_i + 1, col);
-                print!("#");
+            for row in blank..COLH {
+                term::print(row, col, '#');
             }
-
-            col += 1;
         }
 
         term::input(stdin, input);
         term::exit_alter_scr();
-    }
-
-    fn get_chunk(&self) -> usize {
-        rand::rng().random_range(0..=self.spikeness)
     }
 }

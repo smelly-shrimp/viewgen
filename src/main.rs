@@ -2,13 +2,13 @@ use std::io::{self, Stdin};
 
 use crate::view::View;
 
-mod terminal;
+mod term;
 mod view;
 
 fn get_val(stdin: &Stdin, input: &mut String, msg: &str) -> usize {
     print!("{}: ", msg);
-    terminal::flush();
-    terminal::input(stdin, input);
+    term::flush();
+    term::input(stdin, input);
 
     input.trim().parse().unwrap_or_else(|_| {
         println!("Cannot parse value to number, try again");

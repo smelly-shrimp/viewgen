@@ -1,7 +1,7 @@
 use std::io::Stdin;
 
 use rand::Rng;
-use crate::terminal;
+use crate::term;
 
 const COL_LEN: usize = 24;
 
@@ -31,27 +31,27 @@ impl View {
     }
 
     pub fn draw(&self, stdin: &Stdin, input: &mut String) {
-        terminal::enter_alter_scr();
+        term::enter_alter_scr();
 
         let mut col = 1;
         for h in self.buff {
             let blank = COL_LEN - h - self.height - self.get_chunk();
 
             for row_i in 0..blank {
-                terminal::mv_cur(row_i + 1, col);
+                term::mv_cur(row_i + 1, col);
                 print!(".");
             }
 
             for row_i in blank..COL_LEN {
-                terminal::mv_cur(row_i + 1, col);
+                term::mv_cur(row_i + 1, col);
                 print!("#");
             }
 
             col += 1;
         }
 
-        terminal::input(stdin, input);
-        terminal::exit_alter_scr();
+        term::input(stdin, input);
+        term::exit_alter_scr();
     }
 
     fn get_chunk(&self) -> usize {

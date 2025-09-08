@@ -1,6 +1,6 @@
-use std::io::{self, Write};
+use std::io::{self, Stdin, Write};
 
-fn flush() {
+pub fn flush() {
     io::stdout().flush().unwrap();
 }
 
@@ -9,9 +9,9 @@ pub fn enter_alter_scr() {
     flush();
 }
 
-pub fn wait() {
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
+pub fn input(stdin: &Stdin, input: &mut String) {
+    input.clear();
+    stdin.read_line(input).unwrap();
 }
 
 pub fn exit_alter_scr() {

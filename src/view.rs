@@ -1,3 +1,5 @@
+use std::io::Stdin;
+
 use rand::Rng;
 use crate::terminal;
 
@@ -28,7 +30,7 @@ impl View {
         }
     }
 
-    pub fn draw(&self) {
+    pub fn draw(&self, stdin: &Stdin, input: &mut String) {
         terminal::enter_alter_scr();
 
         let mut col = 1;
@@ -48,7 +50,7 @@ impl View {
             col += 1;
         }
 
-        terminal::wait();
+        terminal::input(stdin, input);
         terminal::exit_alter_scr();
     }
 

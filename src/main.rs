@@ -1,22 +1,27 @@
-use text_io::read;
+use std::io::{self, Stdin};
+
+use crate::view::View;
 
 mod terminal;
 mod view;
 
-fn get_values() -> (usize, usize) {
-    print!("(min) Height: ");
-    let height: usize = read!();
+fn get_val(stdin: &Stdin, input: &mut String, msg: &str) -> usize {
+    print!("{}: ", msg);
+    terminal::flush();
+    terminal::input(stdin, input);
 
-    print!("Spikeness: ");
-    let spikeness: usize = read!();
-
-    (height, spikeness)
+    input.trim().parse().unwrap_or_else(|_| {
+        println!("Cannot parse value to number, try again");
+        get_val(stdin, input, msg)
+    })
 }
 
 fn main() {
-    let vals = get_values();
+    let stdin = io::stdin();
+    let mut input = String::new();
 
-    let foo = view::View::new(vals.0, vals.1);
+    let height = get_val(&stdin, &mut input, "(min) height");
+    let spikeness = get_val(&stdin, &mut input, "spikeness");
 
-    foo.draw();
+    View::new(height, spikeness).draw(&stdin, &mut input);
 }

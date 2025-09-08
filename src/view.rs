@@ -29,7 +29,7 @@ impl View {
     }
 
     pub fn draw(&self) {
-        terminal::enter_alter_scr_buff();
+        terminal::enter_alter_scr();
 
         let mut col = 1;
         for h in self.buff {
@@ -48,8 +48,8 @@ impl View {
             col += 1;
         }
 
-        terminal::wait_for_exit();
-        terminal::exit_alter_scr_buff();
+        terminal::wait();
+        terminal::exit_alter_scr();
     }
 
     fn get_chunk(&self) -> usize {

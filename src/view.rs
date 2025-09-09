@@ -44,6 +44,7 @@ impl View {
             }
         }
 
+        term::flush();
         term::input(stdin, input);
         term::exit_alter_scr();
     }

@@ -20,7 +20,7 @@ fn main() {
     let stdin = io::stdin();
     let mut input = String::new();
 
-    let height = get_val(&stdin, &mut input, "(min) height");
+    let height = get_val(&stdin,&mut input, "(min) height");
     let spikeness = get_val(&stdin, &mut input, "spikeness");
 
     let mut view = View::new();
